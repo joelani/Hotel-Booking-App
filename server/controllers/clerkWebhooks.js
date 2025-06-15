@@ -3,7 +3,7 @@ import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
     try {
-        // create Svix with CLERK_WEBHOOK_SECRET
+        // create Svix with CLERK_WEBHOOK SECRET
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
 
         //Getting headers
@@ -23,26 +23,25 @@ const clerkWebhooks = async (req, res) => {
             _id: data.id,
             email: data.email_addresses[0].email_address,
             username: data.first_name +" " + data.last_name,
-            Image: data.image_url,
+            image: data.image_url,
         }
 
         //Switch cases for different Events 
         switch (type) {
-            case "userData.created":{
+            case "user.created":{
                 await User.create(userData);
                 break;
             }
                 
-            case "userData.updated":{
+            case "user.updated":{
                 await User.findByIdAndUpdate(data.id, userData);
                 break;
             }
                 
-            case "userData.deleted":{
-                await User.findByIdAndDelete(data.id, userData);
+            case "user.deleted":{
+                await User.findByIdAndDelete(data.id);
                 break;
             }
-                
                 
             default:
                 break;
